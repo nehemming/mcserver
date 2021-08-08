@@ -1,0 +1,7 @@
+.state/
+.terraform/
+.terraform*
+terraform.tfvars
+**/mods/*.jar
+servers/
+

@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  minecraft:
+    image: itzg/minecraft-server
+    container_name: ${minecraft_server_name}
+
+    ports:
+      - "${minecraft_public_port}:25565"
+      - "${minecraft_rcon_public_port}:25575"
+
+    environment:
+      EULA: "TRUE"
+      ENABLE_RCON: "${minecraft_enable_rcon}"
+      RCON_PASSWORD: "${minecraft_rcon_password}"
+      ENABLE_QUERY: "false"
+      ENFORCE_WHITELIST: "true"
+      WHITELIST: "${whitelist}"
+      OPS: "${opslist}"
+      %{ for setting_key, setting_value in minecraft_settings ~}
+${setting_key}: "${setting_value}"
+      %{ endfor ~}
+
+    volumes:
+      # attach a directory relative to the directory containing this compose file
+      - ${minecraft_data_folder}:/data
+      - /etc/timezone:/etc/timezone:ro
+      - ${server_mods_folder}:/mods:ro
+
+    tty: true
+    stdin_open: true
+    restart: always
